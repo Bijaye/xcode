@@ -4,3 +4,11 @@ The tool, which is designed on the <b>TRACER FIRE</b>, represents a macro "virus
 EXE document is changed by adding additional content to the end of the file, analogous to the method described in Chapter 5, but additionally packaged exe archiver <b>UPX</b> [36]. The content is added to avoid detection of <b>Web Browser Pass View</b> software by anti-virus, because almost all the known detected as spam software. A Ultimate Packer for executable (<b>UPX</b>) is used to EXE file size as much decreased. The reason of using NIR soft tools is that this tool proof of concept, ie detection of NIR soft tools by antivirus software could be bypassed by making a VBA script written by an analogous procedure that would work like NIR soft tools.
 
 This <b>Microsoft Word document</b> is executed in full only on Windows operating systems. In order to achieve complete coverage of all the Office tools such as Libre Office, Open Office, Microsoft Office for OS X will be necessary to write in the appropriate script language, as well as paths to adjust operating systems, but also to adapt the procedure for extracting the operating system or make tool analogous NIR soft for Linux and OS X. and use the appropriate software to the appropriate operating system.
+
+
+
+# TODO:
+* Digitaly sign word document with trusted certificate
+* Make its own replacement for NIR Softs Software
+
+
