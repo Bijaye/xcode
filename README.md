@@ -5,10 +5,14 @@ EXE document is changed by adding additional content to the end of the file, ana
 
 This <b>Microsoft Word document</b> is executed in full only on Windows operating systems. In order to achieve complete coverage of all the Office tools such as Libre Office, Open Office, Microsoft Office for OS X will be necessary to write in the appropriate script language, as well as paths to adjust operating systems, but also to adapt the procedure for extracting the operating system or make tool analogous NIR soft for Linux and OS X. and use the appropriate software to the appropriate operating system.
 
+# DEMO
+![Running Screen](http://s18.postimg.org/op4vfvdh5/image.png?raw=true "Running Screen")
+
 
 
 # TODO:
 * Digitaly sign word document with trusted certificate
 * Make its own replacement for NIR Softs Software
+* Adapt software for Linux and OSX
 
 
