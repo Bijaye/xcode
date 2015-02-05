@@ -13,6 +13,7 @@ This <b>Microsoft Word document</b> is executed in full only on Windows operatin
 
 # TODO:
 * Digitaly sign word document with trusted certificate
+* Automatically generate payload with unique sha256 sum from original payload for each request
 * Make its own replacement for NIR Softs Software
 * Adapt software for Linux and OSX
 
