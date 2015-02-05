@@ -8,6 +8,7 @@ This <b>Microsoft Word document</b> is executed in full only on Windows operatin
 # DEMO
 ![Running Screen](/_imgs/1.png?raw=true "Running Screen")
 ![Source Code](/_imgs/2.png?raw=true "Source Code")
+![Gathered Info](/_imgs/3.png?raw=true "Gathered Info")
 
 
 
